@@ -5,14 +5,17 @@
 Summary:	PhotoSwipe - The web image gallery for your mobile device
 Name:		jquery-%{plugin}
 Version:	3.0.4
-Release:	1
+Release:	2
 License:	MIT
 Group:		Applications/WWW
 Source0:	https://github.com/downloads/codecomputerlove/PhotoSwipe/code.photoswipe-%{version}.zip
 # Source0-md5:	c690d4d8d44c52a695ee04c813b619e7
 URL:		http://www.photoswipe.com/
 BuildRequires:	rpmbuild(macros) >= 1.553
+BuildRequires:	unzip
+BuildRequires:	yuicompressor
 Requires:	jquery
+Requires:	js-klass
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -36,12 +39,27 @@ mv %{version}/* .
 
 %undos -f txt,js
 
+%build
+# pack css
+install -d build
+
+%if 0%{!?debug:1}
+# compress with yui to get rid of comments, etc
+yuicompressor --charset UTF-8 %{plugin}.css -o build/%{plugin}.css
+%else
+cp -p %{plugin}.css build
+%endif
+
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_appdir}
-cp -p code.photoswipe.jquery-%{version}.min.js $RPM_BUILD_ROOT%{_appdir}/%{plugin}-%{version}.min.js
-cp -p code.photoswipe.jquery-%{version}.js $RPM_BUILD_ROOT%{_appdir}/%{plugin}-%{version}.js
+cp -p code.%{plugin}.jquery-%{version}.min.js $RPM_BUILD_ROOT%{_appdir}/%{plugin}-%{version}.min.js
+cp -p code.%{plugin}.jquery-%{version}.js $RPM_BUILD_ROOT%{_appdir}/%{plugin}-%{version}.js
 ln -s %{plugin}-%{version}.min.js $RPM_BUILD_ROOT%{_appdir}/%{plugin}.js
+
+# css and media
+cp -p build/%{plugin}.css $RPM_BUILD_ROOT%{_appdir}
+cp -p loader.gif error.gif icons@2x.png $RPM_BUILD_ROOT%{_appdir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
