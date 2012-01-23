@@ -5,7 +5,7 @@
 Summary:	PhotoSwipe - The web image gallery for your mobile device
 Name:		jquery-%{plugin}
 Version:	3.0.4
-Release:	2
+Release:	3
 License:	MIT
 Group:		Applications/WWW
 Source0:	https://github.com/downloads/codecomputerlove/PhotoSwipe/code.photoswipe-%{version}.zip
@@ -15,7 +15,7 @@ BuildRequires:	rpmbuild(macros) >= 1.553
 BuildRequires:	unzip
 BuildRequires:	yuicompressor
 Requires:	jquery
-Requires:	js-klass
+Requires:	js-klass >= 1.2.2
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
